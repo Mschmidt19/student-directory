@@ -1,4 +1,5 @@
-#Array of all student names
+=begin
+#Array of hashes containing student names and cohorts
 students = [
   {name: "Dr. Hannibal Lecter", cohort: :november},
   {name: "Darth Vader", cohort: :november},
@@ -12,6 +13,28 @@ students = [
   {name: "Joffrey Baratheon", cohort: :november},
   {name: "Norman Bates", cohort: :november}
 ]
+=end
+
+#Changed to get names from user instead
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, simply hit return twice"
+  #Create an empty array
+  students = []
+  #Get the first name, store as name
+  name = gets.chomp
+  #While name is not empty, repeat this code
+  while !name.empty? do
+    #Add the student hash to the array
+    students << {name: name, cohort: :november}
+    puts "Now we have #{students.count} students"
+    #Get another name from the user
+    name = gets.chomp
+  end
+  #return the array of students
+  students
+end
+
 #METHODS
 #Prints header that comes before student names
 def print_header
@@ -30,6 +53,7 @@ def print_footer(students)
 end
 
 #CALLING EACH METHOD
+students = input_students
 print_header
 print(students)
 print_footer(students)

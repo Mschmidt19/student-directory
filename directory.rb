@@ -115,11 +115,18 @@ end
 
 def remove_student
   puts "Which student would you like to remove?"
+  puts "If you would like to remove all students type 'ALL'"
   name_to_remove = STDIN.gets.chomp
-  @students.each do |student|
-    if student[:name] == name_to_remove
-      @students.delete(student)
-      puts "Removed #{name_to_remove} from the Students Directory"
+  if name_to_remove == "ALL"
+    before_deleting_count = @students.size
+    @students = []
+    puts "Removed all #{before_deleting_count} students from the Students Directory"
+  else
+    @students.each do |student|
+      if student[:name] == name_to_remove
+        @students.delete(student)
+        puts "Removed #{name_to_remove} from the Students Directory"
+      end
     end
   end
 end
@@ -130,9 +137,9 @@ def print_menu
   puts "2. Show all students"
   puts "3. Show students whose name start with a selected letter"
   puts "4. Show students whose name is less than a selected number of characters"
-  puts "5. Remove a student"
-  puts "7. Load the list from students.csv"
-  puts "8. Save the list to students.csv"
+  puts "5. Remove a student, or all students"
+  puts "7. Load a list from a file"
+  puts "8. Save the list to a file"
   puts "9. Exit"
 end
 
@@ -144,7 +151,13 @@ end
 
 def save_students
   #Open the file for writing
-  file = File.open("students.csv", "w")
+  puts "Which file would you like to save to?"
+  puts "Type the file name, or hit enter to save to students.csv"
+  file_name = gets.chomp
+  if file_name == ""
+    file_name = "students.csv"
+  end
+  file = File.open(file_name, "w")
   #Iterate over the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
@@ -152,7 +165,7 @@ def save_students
     file.puts csv_line
   end
   file.close
-  puts "Saved file"
+  puts "Saved list to #{file_name}"
 end
 
 def load_students(filename = "students.csv")
@@ -167,7 +180,9 @@ end
 
 def try_load_students
   filename = ARGV.first #First argument from the command line
-  return if filename.nil? #Get out of the method if no filename given
+  if filename.nil?
+    filename = "students.csv"
+  end
   if File.exists?(filename) #If it exists
     load_students(filename)
   else
@@ -189,10 +204,18 @@ def process(selection)
   when "5"
     remove_student
   when "7"
-    load_students
+    puts "What file would you like to load?"
+    puts "Type the file name, or hit enter to load from students.csv"
+    user_input = gets.chomp
+    if user_input == ""
+      load_students
+    else
+      load_students(user_input)
+    end
   when "8"
     save_students
   when "9" #terminates the program
+    puts "Goodbye!"
     exit
   else
     puts "I don't know what you meant, try again"

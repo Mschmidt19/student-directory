@@ -43,8 +43,34 @@ def print_header
   puts "-----------------"
 end
 
+#Prints total number of students in directory
+def print_footer(students)
+  if students.count == 1
+    puts "Overall, we have #{students.count} great student"
+  elsif students.count > 1
+    puts "Overall, we have #{students.count} great students"
+  end
+end
+
 #Prints all names from students array
 def print(students)
+  if students.size <= 0
+    puts "Sorry, there are no students to display"
+  else
+    print_header
+    students.each_with_index do |student, index|
+      #Added formatting / justification to output
+      #Also added index number before each name
+      index_s = "#{index + 1}: "
+      name_s = "#{student[:name]}"
+      cohort_s = " #{student[:cohort]} cohort"
+      puts index_s.ljust(4) + name_s.ljust(32) + cohort_s.ljust(20)
+    end
+    print_footer(students)
+  end
+end
+
+def print_no_header_or_footer(students)
   if students.size <= 0
     puts "Sorry, there are no students to display"
   else
@@ -72,7 +98,7 @@ def print_names_starting_with(students)
       match_array.push(student)
     end
   end
-  print(match_array)
+  print_no_header_or_footer(match_array)
   if match_array.length == 1
     puts "We have found #{match_array.size} student whose name begins with #{letter.upcase}"
   elsif match_array.length > 1
@@ -95,7 +121,7 @@ def print_names_less_than_x_characters(students)
       match_array.push(student)
     end
   end
-  print(match_array)
+  print_no_header_or_footer(match_array)
   if match_array.length == 1
     puts "We have found #{match_array.size} student with a name of #{number} characters or less"
   elsif match_array.length > 1
@@ -112,12 +138,37 @@ def print_footer(students)
   end
 end
 
+#INTERACTIVE MENU
+def interactive_menu
+  students = []
+  loop do
+    puts "What would you like to do?"
+    # 1. Print the menu and ask the user what to do
+    puts "1. Input the students"
+    puts "2. Show all students"
+    puts "3. Show students whose name start with a selected letter"
+    puts "4. Show students whose name is less than a selected number of characters"
+    puts "9. Exit"
+    # 2. Read the input and save it into a variable
+    selection = gets.chomp
+    # 3. Do what the user has asked
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print(students)
+    when "3"
+      print_names_starting_with(students)
+    when "4"
+      print_names_less_than_x_characters(students)
+    when "9" #terminates the program
+      exit
+    else
+      puts "I don't know what you meant, try again"
+    end
+    # 4. Repeat from step 1
+  end
+end
+
 #CALLING EACH METHOD
-students = input_students
-print_header
-print(students)
-print_footer(students)
-
-print_names_starting_with(students)
-
-print_names_less_than_x_characters(students)
+interactive_menu

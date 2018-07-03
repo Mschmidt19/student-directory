@@ -12,12 +12,24 @@ students = [
   "Joffrey Baratheon",
   "Norman Bates"
 ]
-#Print all names from array
-puts "The students of Villains Academy"
-puts "-----------------"
-#Iterates through students array, printing each one
-students.each do |student|
-  puts student
+#METHODS
+#Prints header that comes before student names
+def print_header
+  puts "The students of Villains Academy"
+  puts "-----------------"
 end
-#Then print total number of students (all on one line)
-puts "Overall, we have #{students.count} great students"
+#Prints all names from students array
+def print(names)
+  names.each do |name|
+    puts name
+  end
+end
+#Prints total number of students in directory
+def print_footer(names)
+  puts "Overall, we have #{names.count} great students"
+end
+
+#CALLING EACH METHOD
+print_header
+print(students)
+print_footer(students)

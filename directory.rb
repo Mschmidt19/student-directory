@@ -1,20 +1,3 @@
-=begin
-#Array of hashes containing student names and cohorts
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},
-  {name: "Norman Bates", cohort: :november}
-]
-=end
-
 @students = [] #An empty array accessable to all methods
 
 #METHODS
@@ -24,14 +7,14 @@ def input_students
   puts "Please enter the names of the students"
   puts "To finish, simply hit return twice"
   #Get the first name, store as name
-  name = gets.chomp
+  name = STDIN.gets.chomp
   #While name is not empty, repeat this code
   while !name.empty? do
     #Add the student hash to the array
     @students << {name: name, cohort: :november}
     puts "Now we have #{@students.count} students"
     #Get another name from the user
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
   #return the array of students
   @students
@@ -91,7 +74,7 @@ end
 #Asks user for a letter and returns all student info for student names beginning with that letter
 def print_names_starting_with
   puts "Which letter would you like to search for?"
-  letter = gets.chomp
+  letter = STDIN.gets.chomp
   match_array = []
   @students.each_with_index do |student, index|
     #Checks input against capital and lowercase
@@ -110,12 +93,12 @@ end
 #Asks users for an integer x and prints all student info for students whose names are less than or equal to x characters long
 def print_names_less_than_x_characters
   puts "Please set the max character length of names to display"
-  number = gets.chomp
+  number = STDIN.gets.chomp
   match_array = []
   #Will not continue unless input is an integer, and avoided cases in which to_i for a string returns 0, AKA an integer
   while number.to_i.to_s != number
     puts "Please enter an integer"
-    number = gets.chomp
+    number = STDIN.gets.chomp
   end
   @students.each_with_index do |student, index|
     if student[:name].length <= number.to_i
@@ -132,7 +115,7 @@ end
 
 def remove_student
   puts "Which student would you like to remove?"
-  name_to_remove = gets.chomp
+  name_to_remove = STDIN.gets.chomp
   @students.each do |student|
     if student[:name] == name_to_remove
       @students.delete(student)
@@ -169,15 +152,28 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Saved file"
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
+  puts "Loaded #{@students.count} students from #{filename}"
+end
+
+def try_load_students
+  filename = ARGV.first #First argument from the command line
+  return if filename.nil? #Get out of the method if no filename given
+  if File.exists?(filename) #If it exists
+    load_students(filename)
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit #quit the program
+  end
 end
 
 def process(selection)
@@ -208,10 +204,10 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
-    # 4. Repeat from step 1
+    process(STDIN.gets.chomp)
   end
 end
 
 #CALLING EACH METHOD
+try_load_students
 interactive_menu

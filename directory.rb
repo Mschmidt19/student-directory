@@ -148,6 +148,7 @@ def print_menu
   puts "3. Show students whose name start with a selected letter"
   puts "4. Show students whose name is less than a selected number of characters"
   puts "5. Remove a student"
+  puts "7. Load the list from students.csv"
   puts "8. Save the list to students.csv"
   puts "9. Exit"
 end
@@ -170,6 +171,15 @@ def save_students
   file.close
 end
 
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(",")
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
+end
+
 def process(selection)
   case selection
   when "1"
@@ -182,6 +192,8 @@ def process(selection)
     print_names_less_than_x_characters
   when "5"
     remove_student
+  when "7"
+    load_students
   when "8"
     save_students
   when "9" #terminates the program
